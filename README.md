@@ -1,6 +1,6 @@
 <!-- Logo -->
 <p align="center">
-  <img src="/img/logo.svg" alt="Logo" width="300" height="300">
+  <img src="/img/logo.svg" alt="Logo" width="300" height="150">
 </p>
 
 Botique de Software de primer uso CuerdOS GNU/Linux, para darle su primer bienvenida a nuestra distribución. Potenciada por Software libre y tecnologias libres como Python y Ruby.
