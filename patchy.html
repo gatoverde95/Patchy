@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.png" type="image/webp"/>
+    <title>Patchy - GatoVerde95</title>
+    <link rel="stylesheet" href="pages/styles.css">
+    <style>
+        /* Añadir estilos para el botón de copiar */
+        .copy-btn {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Añadir estilos para centrar la imagen y ajustar el alto */
+        .centered-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Para centrar verticalmente y horizontalmente */
+        }
+
+        .centered-logo img {
+            height: auto; /* Mantener proporción de la imagen */
+            max-height: 150px; /* Ajustar la altura máxima según sea necesario */
+        }
+
+        /* Estilos para los botones de paquete de instalación y procedimiento */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Permitir que los botones se envuelvan en pantallas pequeñas */
+            margin: 20px 0;
+        }
+
+        .action-buttons .button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .action-buttons .button img {
+            margin-right: 10px;
+            height: 24px;
+            width: auto;
+        }
+
+        .action-buttons .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos para listas y números centrados */
+        ol, ul {
+            padding-left: 20px;
+            list-style-position: inside; /* Centrar los números y puntos */
+        }
+
+        /* Estilos responsivos adicionales */
+        @media (max-width: 600px) {
+            .program-content {
+                padding: 10px;
+            }
+
+            .program-image img {
+                width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="logo.png" alt="Logo de GatoVerde 95 Studios">
+        </a>
+        <h1>Debbie de Deb's</h1>
+    </header>
+    <nav>
+        <ul class="menu">
+            <li><a href="cuerdos.html">CuerdOS</a></li>
+            <li><a href="patchy.html">Patchy</a></li>
+            <li><a href="cuerdrec.html">CuerdRec</a></li>
+            <li><a href="debbie.html">Debbie de Deb's</a></li>
+            <li><a href="#soporte">Soporte</a></li>
+            <li><a href="#conectame">Conéctame!</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section class="program-section centered-logo">
+            <img src="patchy/patchy.svg" alt="logo" style="width: 160px;">
+        </section>
+        <section class="program-section">
+            <div class="program-content">
+                <div class="program-image">
+                    <img src="patchy/patchy.png" alt="Captura de pantalla de Debbie">
+                </div>
+                <div class="program-details">
+                    <h2>Patchy - 1.0a (Elena)</h2>
+                    <p>Patchy es una minitienda o botique de software de primer uso en CuerdOS GNU/Linux. Con una interfaz gráfica amigable basada en Python 3, GTK y Qt, permite instalar aplicaciones recomendadas por el equipo de CuerdOS.</p>
+                    
+                    <h1>Paquete de instalación no se encuentra aún disponible.</h1>
+
+                    <h2>Características</h2>
+                    <ul>
+                        <li>Interfaz intuitiva y amigable.</li>
+                        <li>Integración con CuerdOS GNU/Linux.</li>
+                        <li>Fácil instalación y configuración.</li>
+                        <li>Acceso rápido a aplicaciones.</li>
+                        <li>Dependencias gestionadas.</li>
+                        <li>Soporte para Ingles (English).</li>
+                        <li>Diseño modular.</li>
+                        <li>Compatible con entornos de escritorio populares.</li>
+                        <li>Completamente gratuito y de código abierto.</li>
+                    </ul>
+                    <h2>Requisitos</h2>
+                    <ul>
+                        <li>Debian 12+ o cualquier derivado compatible.</li>
+                        <li>GTK 3.0 o Qt 5+</li>
+                        <li>Nala instalado en el sistema. (En CuerdOS ya esta instalado)</li>
+                        <li>Python 3.x</li>
+                    </ul>
+
+                    <h2>Uso</h2>
+                    <ul>
+                        <li>Abre la aplicación desde el menú o ejecuta <code id="code4">python3 patchy.py</code><button class="copy-btn" onclick="copyToClipboard('#code4')">Copiar</button>.</li>
+                        <li>Busca una aplicación.</li>
+                        <li>Le das a Instalar y proporciona tu contraseña (No registra contraseñas).</li>
+                        <li>Esperas a que el programa se encuentre instalado y listo.</li>
+                    </ul>
+                    <h2>Licencia</h2>
+                    <p>Este proyecto está licenciado bajo la GPLv3. Puedes consultar el archivo LICENSE para más información.</p>
+                    <p><strong>Repositorio:</strong> <a href="https://github.com/gatoverde95/Patchy">Debbie-de-Debs</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Esta página está hecha PS/CSS. GatoVerde95 2026</p>
+    </footer>
+    <script>
+        function copyToClipboard(selector) {
+            const element = document.querySelector(selector);
+            const text = element.innerText || element.textContent;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('Texto copiado al portapapeles');
+        }
+    </script>
+</body>
+</html>
