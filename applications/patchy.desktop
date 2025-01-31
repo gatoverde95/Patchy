@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Name=Patchy
+Name[es]=Patchy
+Comment=CuerdOS Software Store
+Comment[es]=Botique de software de CuerdOS
+GenericName=Software MiniStore
+GenericName[es]=Botique de software
+Exec=bash /usr/share/patchy/inyect.sh
+Icon=/usr/share/patchy/patchy.svg
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=System;
+Keywords=packages;software;

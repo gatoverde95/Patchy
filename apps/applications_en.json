@@ -1,0 +1,55 @@
+{
+    "Internet": [
+        {"name": "GNOME Epiphany", "command": "epiphany", "description": "Lightweight web browser from GNOME", "icon": "epiphany"},
+        {"name": "Chromium", "command": "chromium", "description": "Web browser", "icon": "chromium"},
+        {"name": "uGet", "command": "uget", "description": "File downloader", "icon": "uget"},
+        {"name": "Transmission (Qt)", "command": "transmission-qt", "description": "BitTorrent client", "icon": "transmission-qt"},
+        {"name": "Telegram (CuerdOS Version)", "command": "tdesktop", "description": "Instant messaging", "icon": "telegram"},
+        {"name": "Midori (Requires Extra Repo)", "command": "midori", "description": "Firefox-based browser", "icon": "midori"}
+    ],
+    "Graphics/Editing": [
+        {"name": "GIMP", "command": "gimp", "description": "Image editor", "icon": "gimp"},
+        {"name": "Inkscape", "command": "inkscape", "description": "Vector graphics editor", "icon": "inkscape"},
+        {"name": "darktable", "command": "darktable", "description": "RAW photo processor", "icon": "darktable"},
+        {"name": "Krita", "command": "krita", "description": "Digital painting tool", "icon": "krita"},
+        {"name": "Eye of MATE", "command": "eom", "description": "Image viewer", "icon": "eom"},
+        {"name": "Blender", "command": "blender", "description": "3D creation software", "icon": "blender"}
+    ],
+    "Office": [
+        {"name": "LibreOffice", "command": "libreoffice", "description": "Office suite", "icon": "libreoffice"},
+        {"name": "Abiword", "command": "abiword", "description": "Word processor", "icon": "abiword"},
+        {"name": "Pluma", "command": "pluma", "description": "Text editor", "icon": "pluma"},
+        {"name": "PDF Arranger", "command": "pdfarranger", "description": "PDF document linker", "icon": "pdfarranger"},
+        {"name": "MATE Calc", "command": "mate-calc", "description": "Advanced calculator", "icon": "mate-calc"}
+    ],
+    "Multimedia": [
+        {"name": "VLC", "command": "vlc", "description": "Multimedia player", "icon": "vlc"},
+        {"name": "OBS", "command": "obs-studio", "description": "Streaming software", "icon": "obs-studio"},
+        {"name": "MPC-Qt", "command": "mpc-qt", "description": "Video player via Qt", "icon": "mpc-qt"},
+        {"name": "Audacity", "command": "audacity", "description": "Audio editor", "icon": "audacity"},
+        {"name": "Easyeffects", "command": "easyeffects", "description": "Audio effects", "icon": "easyeffects"},
+        {"name": "Shotcut", "command": "shotcut", "description": "Video editor", "icon": "shotcut"},
+        {"name": "Museeks", "command": "Museeks", "description": "Music player", "icon": "museeks"},
+        {"name": "Cheese", "command": "cheese", "description": "Photo and video capture", "icon": "cheese"},
+        {"name": "VokoscreenNG", "command": "vokoscreen-ng", "description": "Screen recording software", "icon": "voko"}
+    ],
+    "System": [
+        {"name": "Xfce Task Manager", "command": "xfce4-taskmanager", "description": "Task manager", "icon": "xfce4-taskmanager"},
+        {"name": "Terminator", "command": "terminator", "description": "Modern tiling terminal", "icon": "terminator"},
+        {"name": "Tilix", "command": "tilix", "description": "Terminal emulator", "icon": "tilix"},
+        {"name": "Engrampa", "command": "engrampa", "description": "Compressed file manager", "icon": "engrampa"},
+        {"name": "Q4Wine", "command": "q4wine", "description": "Windows application compatibility", "icon": "q4wine"},
+        {"name": "Wine", "command": "winecfg", "description": "Compatibility to run Windows applications", "icon": "wine"},
+        {"name": "gdebi", "command": "gdebi", "description": "Installer for .deb packages", "icon": "gdebi"},
+        {"name": "PeaZip (Requires Extra Repo)", "command": "peazip", "description": "Advanced compressed file manager", "icon": "peazip"},
+        {"name": "GParted", "command": "gparted", "description": "Disk management utility", "icon": "gparted"}
+    ],
+    "Development": [
+        {"name": "Thonny", "command": "thonny", "description": "IDE for Python", "icon": "thonny"},
+        {"name": "Geany", "command": "geany", "description": "Text editor for development", "icon": "geany"},
+        {"name": "Bluefish", "command": "bluefish", "description": "Text editor for web development", "icon": "bluefish"},
+        {"name": "KDevelop", "command": "kdevelop", "description": "IDE for software development", "icon": "kdevelop"},
+        {"name": "Kate", "command": "kate", "description": "Advanced text editor", "icon": "kate"},
+        {"name": "GNU Emacs", "command": "emacs", "description": "Extensible and customizable text editor", "icon": "emacs"}
+    ]
+}
