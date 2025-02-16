@@ -4,14 +4,15 @@ import threading
 import time
 import os
 import json
+from gi.repository import Gtk, GLib, GdkPixbuf, Notify
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib, GdkPixbuf
+gi.require_version('Notify', '0.7')
 
 # Detectar si estamos en Wayland o X11
 def detect_graphics_backend():
     session_type = os.getenv('XDG_SESSION_TYPE', '').lower()
-    
+
     if session_type == 'wayland':
         print("Detectado Wayland")
     else:
@@ -40,15 +41,45 @@ class SoftwareBoutique(Gtk.Window):
         if os.path.exists(icon_path):
             self.set_icon_from_file(icon_path)
 
+        Notify.init("Patchy")
+
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.add(main_box)
         self.create_command_bar(main_box)
 
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
         self.notebook = Gtk.Notebook()
         self.notebook.set_scrollable(True)
-        main_box.pack_start(self.notebook, True, True, 0)
+        scrolled_window.add(self.notebook)
+        main_box.pack_start(scrolled_window, True, True, 0)
+
+        self.progress_bar = Gtk.ProgressBar()
+        self.progress_bar.set_show_text(True)
+        self.progress_bar.set_no_show_all(True)
+        self.cancel_button = Gtk.Button(label="Cancelar")
+        self.cancel_button.connect("clicked", self.cancel_installation)
+        self.cancel_button.set_no_show_all(True)
+
+        self.action_button = Gtk.Button(label="Instalar/Desinstalar Paquetes Seleccionados (0)")
+        self.action_button.set_sensitive(False)
+        self.action_button.connect("clicked", self.action_selected_packages)
+
+        progress_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        progress_box.pack_start(self.progress_bar, True, True, 10)
+        progress_box.pack_end(self.cancel_button, False, False, 10)
+
+        main_box.pack_start(progress_box, False, False, 10)
+        main_box.pack_start(self.action_button, False, False, 10)
 
         self.populate_notebook()
+        self.selected_packages = []
+        self.selected_for_install = []
+        self.selected_for_uninstall = []
+
+        self.activity = None
+        self._stop_event = threading.Event()
 
     def create_command_bar(self, parent_box):
         menubar = Gtk.MenuBar()
@@ -56,16 +87,16 @@ class SoftwareBoutique(Gtk.Window):
         about_item = Gtk.MenuItem(label="Acerca de")
         about_item.connect("activate", self.show_about_dialog)
         help_menu.append(about_item)
-        
+
         store_menu = Gtk.Menu()
         open_bauh_item = Gtk.MenuItem(label="Abrir Bauh")
         open_bauh_item.connect("activate", self.open_bauh)
         store_menu.append(open_bauh_item)
-        
+
         update_item = Gtk.MenuItem(label="Actualizar Lista de Aplicaciones")
         update_item.connect("activate", self.update_app_list)
         store_menu.append(update_item)
-        
+
         store_menu_item = Gtk.MenuItem(label="Tienda")
         store_menu_item.set_submenu(store_menu)
         menubar.append(store_menu_item)
@@ -76,104 +107,238 @@ class SoftwareBoutique(Gtk.Window):
         parent_box.pack_start(menubar, False, False, 0)
 
     def populate_notebook(self):
+        self.app_boxes = {}
         for category, apps in CATEGORIES.items():
             tab_label = Gtk.Label(label=category)
             category_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, margin=10)
             for app in apps:
                 app_box = self.create_app_box(app)
+                self.app_boxes[app["command"]] = app_box
                 category_box.pack_start(app_box, False, False, 0)
             self.notebook.append_page(category_box, tab_label)
+        self.update_all_app_statuses()
 
     def create_app_box(self, app):
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        
+
         # Ruta a la carpeta de iconos locales
         current_dir = os.path.dirname(os.path.realpath(__file__))
         icon_path = os.path.join(current_dir, "/usr/share/patchy/icons", f"{app['icon']}.svg")
-        
+
         if os.path.exists(icon_path):
             icon = Gtk.Image.new_from_file(icon_path)
         else:
             icon = Gtk.Image.new_from_icon_name("image-missing", Gtk.IconSize.DIALOG)
-        
+
         label = Gtk.Label(label=f"<b>{app['name']}</b>\n{app['description']}", use_markup=True)
         label.set_xalign(0)
 
-        if self.is_installed(app["command"]):
-            button_label = "Desinstalar"
-        else:
-            button_label = "Instalar"
-        
-        install_button = Gtk.Button(label=button_label, margin=5)
-        install_button.connect("clicked", self.on_install, app, install_button)
+        checkbox = Gtk.CheckButton()
+        checkbox.connect("toggled", self.on_checkbox_toggled, app["command"])
+        box.pack_start(checkbox, False, False, 0)
         box.pack_start(icon, False, False, 0)
         box.pack_start(label, True, True, 0)
-        box.pack_end(install_button, False, False, 0)
+
+        installed_label = Gtk.Label(label="", use_markup=True)
+        box.pack_end(installed_label, False, False, 0)
+
         return box
 
     def is_installed(self, command):
+        # Verificar si el binario del programa existe en las rutas comunes
+        paths = os.getenv('PATH', '').split(os.pathsep)
+        for path in paths:
+            if os.path.exists(os.path.join(path, command)):
+                print(f"'{command}' encontrado en {path}")
+                return True
+
+        # Verificar si el paquete está instalado con dpkg -l
         try:
-            subprocess.run(["which", command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-            return True
+            result = subprocess.run(['dpkg-query', '-W', '-f=${Status}', command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if result.returncode == 0 and 'install ok installed' in result.stdout.decode():
+                print(f"'{command}' está instalado (verificado con dpkg)")
+                return True
         except subprocess.CalledProcessError:
-            return False
+            pass
 
-    def on_install(self, button, app, install_button):
-        if button.get_label() == "Instalar":
-            self.show_progress_bar(app["command"], app["name"], "Espere un momento se esta Instalando...", install_button)
-        else:
-            self.show_progress_bar(app["command"], app["name"], "Espere un momento se esta Desinstalando...", install_button)
+        print(f"'{command}' no está instalado")
+        return False
 
-    def show_progress_bar(self, command, package, action, install_button):
-        dialog = Gtk.Dialog(title=action, parent=self, modal=True)
-        dialog.set_default_size(400, 100)
-        progress_bar = Gtk.ProgressBar()
-        progress_bar.set_show_text(True)
-        dialog.vbox.pack_start(progress_bar, True, True, 10)
+    def on_checkbox_toggled(self, checkbox, command):
+        self.show_progress_bar("Verificando estado...")  # Mostrar barra de progreso
 
-        threading.Thread(target=self.run_install_uninstall, args=(command, package, action, progress_bar, dialog, install_button)).start()
-        dialog.show_all()
-
-    def run_install_uninstall(self, command, package, action, progress_bar, dialog, install_button):
-        try:
-            for i in range(1, 101):
-                GLib.idle_add(progress_bar.set_fraction, i / 100.0)
-                time.sleep(0.05)
-
-            if action == "Espere un momento se esta Instalando...":
-                self.install_package(command)
-                GLib.idle_add(install_button.set_label, "Desinstalar")
-                GLib.idle_add(self.show_message, "Instalación completada", f"{package} se ha instalado correctamente.")
+        def check_installed_status():
+            if checkbox.get_active():
+                if command not in self.selected_packages:
+                    self.selected_packages.append(command)
+                    if command in self.selected_for_uninstall or command in self.selected_for_install:
+                        GLib.idle_add(self.update_action_button)
+                        GLib.idle_add(self.hide_progress_bar)
+                        return
+                    if self.is_installed(command):
+                        self.selected_for_uninstall.append(command)
+                    else:
+                        self.selected_for_install.append(command)
             else:
-                self.run_command(f"pkexec nala remove -y {command}")
-                GLib.idle_add(install_button.set_label, "Instalar")
-                GLib.idle_add(self.show_message, "Desinstalación completada", f"{package} se ha desinstalado correctamente.")
-        except subprocess.CalledProcessError:
-            GLib.idle_add(self.show_message, "Error", f"No se pudo {action.lower()} {package}")
-        finally:
-            GLib.idle_add(dialog.destroy)
+                if command in self.selected_packages:
+                    self.selected_packages.remove(command)
+                if command in self.selected_for_uninstall:
+                    self.selected_for_uninstall.remove(command)
+                if command in self.selected_for_install:
+                    self.selected_for_install.remove(command)
 
-    def install_package(self, command):
-        self.run_command(f"pkexec nala install -y {command}")
+            GLib.idle_add(self.update_action_button)
+            GLib.idle_add(self.hide_progress_bar)  # Ocultar barra de progreso
+
+        threading.Thread(target=check_installed_status).start()
+
+    def show_progress_bar(self, text):
+        self.progress_bar.set_fraction(0)
+        self.progress_bar.set_text(text)
+        self.progress_bar.show()
+
+        # Iniciar la barra de progreso en modo activity
+        self.progress_bar.pulse()
+        self.activity = GLib.timeout_add(100, self.progress_bar.pulse)
+
+    def hide_progress_bar(self):
+        if self.activity:
+            GLib.source_remove(self.activity)
+            self.activity = None
+        self.progress_bar.hide()
+
+    def update_action_button(self):
+        num_selected_install = len(self.selected_for_install)
+        num_selected_uninstall = len(self.selected_for_uninstall)
+
+        if num_selected_install > 0 and num_selected_uninstall == 0:
+            self.action_button.set_label(f"Instalar Paquetes Seleccionados ({num_selected_install})")
+            self.action_button.set_sensitive(True)
+        elif num_selected_uninstall > 0 and num_selected_install == 0:
+            self.action_button.set_label(f"Desinstalar Paquetes Seleccionados ({num_selected_uninstall})")
+            self.action_button.set_sensitive(True)
+        else:
+            self.action_button.set_label("Instalar/Desinstalar Paquetes Seleccionados (0)")
+            self.action_button.set_sensitive(False)
+
+        # Habilitar solo las aplicaciones instaladas para desinstalar y las no instaladas para instalar
+        for cmd, box in self.app_boxes.items():
+            app_checkbox = box.get_children()[0]
+            app_installed = self.is_installed(cmd)
+
+            if num_selected_install > 0:
+                app_checkbox.set_sensitive(not app_installed)
+            elif num_selected_uninstall > 0:
+                app_checkbox.set_sensitive(app_installed)
+            else:
+                app_checkbox.set_sensitive(True)
+
+    def action_selected_packages(self, widget):  # pylint: disable=unused-argument
+        if not self.selected_packages:
+            self.show_message("Acción en Paquetes Seleccionados", "No hay paquetes seleccionados.")
+            return
+
+        self.action_button.hide()
+
+        if self.selected_for_install:
+            self.show_progress_bar("Instalando...")
+            self.run_install_uninstall(self.selected_for_install, "install", "Instalando")
+        elif self.selected_for_uninstall:
+            self.show_progress_bar("Desinstalando...")
+            self.run_install_uninstall(self.selected_for_uninstall, "remove", "Desinstalando")
+
+    def run_install_uninstall(self, packages, action, action_text):
+        def task():
+            try:
+                # Mostrar mensaje "Preparando..."
+                GLib.idle_add(self.progress_bar.set_text, "Preparando...")
+                time.sleep(2)
+
+                # Paso "pkexec pide contraseña" (no es un mensaje)
+                package_list = " ".join(packages)
+                self.run_command(f"pkexec nala {action} -y {package_list}")
+
+                # Mostrar mensaje "Aplicando cambios..."
+                GLib.idle_add(self.progress_bar.set_text, "Aplicando cambios...")
+                for i in range(1, 101):
+                    GLib.idle_add(self.progress_bar.set_fraction, i / 100.0)
+                    time.sleep(0.05)
+
+                if action == "install":
+                    GLib.idle_add(self.show_completion_dialog, "Instalación completada", "Los paquetes se han instalado correctamente.")
+                    GLib.idle_add(self.show_notification, "Instalación completada", "Los paquetes se han instalado correctamente.")
+                else:
+                    GLib.idle_add(self.show_completion_dialog, "Desinstalación completada", "Los paquetes se han desinstalado correctamente.")
+                    GLib.idle_add(self.show_notification, "Desinstalación completada", "Los paquetes se han desinstalado correctamente.")
+            except subprocess.CalledProcessError:
+                GLib.idle_add(self.show_message, "Error", f"No se pudo completar la acción: {action_text.lower()}")
+            finally:
+                GLib.idle_add(self.hide_progress_bar)
+                GLib.idle_add(self.action_button.show)
+                GLib.idle_add(self.reset_selection)
+                GLib.idle_add(self.update_app_status_multiple, packages)
+
+        threading.Thread(target=task).start()
 
     def run_command(self, command):
         subprocess.run(command, shell=True, check=True)
 
+    def cancel_installation(self, button):  # pylint: disable=unused-argument
+        if self.activity:
+            self._stop_event.set()
+            self.show_message("Cancelación", "La instalación/desinstalación ha sido cancelada.")
+            self.hide_progress_bar()
+            self.action_button.show()
+            self.reset_selection()
+
+    def show_completion_dialog(self, title, message):
+        dialog = Gtk.MessageDialog(parent=self, message_type=Gtk.MessageType.INFO, text=title, modal=True)
+        dialog.format_secondary_text(message)
+        dialog.add_button(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE)
+        dialog.connect("response", lambda d, r: d.destroy())
+        dialog.show_all()
+
+    def reset_selection(self):
+        self.selected_packages = []
+        self.selected_for_install = []
+        self.selected_for_uninstall = []
+        self.update_action_button()
+
+    def update_app_status_multiple(self, commands):
+        for command in commands:
+            self.update_app_status(command)
+
+    def update_app_status(self, command):
+        app_box = self.app_boxes.get(command)
+        if app_box:
+            installed_label = app_box.get_children()[-1]
+            if self.is_installed(command):
+                installed_label.set_label("(Instalado)")
+            else:
+                installed_label.set_label("")
+
+    def update_all_app_statuses(self):
+        for command in self.app_boxes:
+            self.update_app_status(command)
+
     def show_message(self, title, message):
         dialog = Gtk.MessageDialog(parent=self, message_type=Gtk.MessageType.INFO, text=title, modal=True)
         dialog.format_secondary_text(message)
-        dialog.run()
-        dialog.destroy()
+        dialog.add_button(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE)
+        dialog.connect("response", lambda d, r: d.destroy())
+        dialog.show_all()
 
-    def open_bauh(self, menuitem):
-        # pylint: disable=unused-argument
+    def show_notification(self, title, message):
+        notification = Notify.Notification.new(title, message)
+        notification.show()
+
+    def open_bauh(self, menuitem):  # pylint: disable=unused-argument
         subprocess.Popen(["bauh"], stderr=subprocess.PIPE)
 
-    def show_about_dialog(self, widget):
-        # pylint: disable=unused-argument
+    def show_about_dialog(self, widget):  # pylint: disable=unused-argument
         about_dialog = Gtk.AboutDialog()
         about_dialog.set_program_name("CuerdOS Patchy")
-        about_dialog.set_version("1.0 v100125 Elena")
+        about_dialog.set_version("1.0 v040225 Elena")
         about_dialog.set_comments("Botique de Software para primer uso en CuerdOS GNU/Linux.")
         about_dialog.set_license_type(Gtk.License.GPL_3_0)
         current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -187,15 +352,14 @@ class SoftwareBoutique(Gtk.Window):
             "CuerdOS Community"
         ])
         about_dialog.set_copyright("© 2025 CuerdOS")
-        
+
         if os.path.exists(logo_path):
             logo_pixbuf = GdkPixbuf.Pixbuf.new_from_file(logo_path)
             about_dialog.set_logo(logo_pixbuf)
         about_dialog.run()
         about_dialog.destroy()
 
-    def update_app_list(self, widget):
-        # pylint: disable=unused-argument
+    def update_app_list(self, widget):  # pylint: disable=unused-argument
         self.show_message("Actualizar Lista de Aplicaciones", "La lista de aplicaciones se ha actualizado.")
         # Aquí puedes agregar lógica para actualizar la lista de aplicaciones desde un origen externo
 
@@ -210,7 +374,7 @@ class SoftwareBoutique(Gtk.Window):
                     self.notebook.set_current_page(page_num)
                     return
         self.show_message("Buscar Aplicación", "No se encontró ninguna aplicación con ese nombre.")
-    
+
     def show_app_details(self, app):
         details_dialog = Gtk.Dialog(title=app["name"], parent=self, modal=True)
         details_dialog.set_default_size(400, 300)

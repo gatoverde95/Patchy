@@ -1,17 +1,20 @@
 {
     "Internet": [
-        {"name": "GNOME Epiphany", "command": "epiphany", "description": "Lightweight web browser from GNOME", "icon": "epiphany"},
-        {"name": "Chromium", "command": "chromium", "description": "Web browser", "icon": "chromium"},
+        {"name": "GNOME Epiphany", "command": "epiphany", "description": "Lightweight GNOME web browser", "icon": "epiphany"},
+        {"name": "Ungoogled-Chromium", "command": "ungoogled-chromium", "description": "Google-free web browser", "icon": "chromium"},
         {"name": "uGet", "command": "uget", "description": "File downloader", "icon": "uget"},
         {"name": "Transmission (Qt)", "command": "transmission-qt", "description": "BitTorrent client", "icon": "transmission-qt"},
-        {"name": "Telegram (CuerdOS Version)", "command": "tdesktop", "description": "Instant messaging", "icon": "telegram"},
-        {"name": "Midori (Requires Extra Repo)", "command": "midori", "description": "Firefox-based browser", "icon": "midori"}
+        {"name": "Telegram", "command": "tdesktop", "description": "Instant messaging", "icon": "telegram"},
+        {"name": "Brave", "command": "brave", "description": "Private browser based on Chromium", "icon": "brave"},
+        {"name": "Vivaldi", "command": "vivaldi-stable", "description": "Aesthetic browser based on Chromium", "icon": "vivaldi"}
     ],
     "Graphics/Editing": [
         {"name": "GIMP", "command": "gimp", "description": "Image editor", "icon": "gimp"},
         {"name": "Inkscape", "command": "inkscape", "description": "Vector graphics editor", "icon": "inkscape"},
         {"name": "darktable", "command": "darktable", "description": "RAW photo processor", "icon": "darktable"},
         {"name": "Krita", "command": "krita", "description": "Digital painting tool", "icon": "krita"},
+        {"name": "Flameshot", "command": "flameshot", "description": "Screenshot tool", "icon": "flameshot"},
+        {"name": "qView", "command": "qview", "description": "Qt image viewer", "icon": "qview"},
         {"name": "Eye of MATE", "command": "eom", "description": "Image viewer", "icon": "eom"},
         {"name": "Blender", "command": "blender", "description": "3D creation software", "icon": "blender"}
     ],
@@ -19,37 +22,49 @@
         {"name": "LibreOffice", "command": "libreoffice", "description": "Office suite", "icon": "libreoffice"},
         {"name": "Abiword", "command": "abiword", "description": "Word processor", "icon": "abiword"},
         {"name": "Pluma", "command": "pluma", "description": "Text editor", "icon": "pluma"},
-        {"name": "PDF Arranger", "command": "pdfarranger", "description": "PDF document linker", "icon": "pdfarranger"},
+        {"name": "PDF Arranger", "command": "pdfarranger", "description": "Document binder", "icon": "pdfarranger"},
+        {"name": "ONLYOFFICE", "command": "onlyoffice-desktopeditors", "description": "Aesthetic office suite", "icon": "onlyoffice"},
+        {"name": "Orage", "command": "orage", "description": "Xfce calendar", "icon": "orage"},
         {"name": "MATE Calc", "command": "mate-calc", "description": "Advanced calculator", "icon": "mate-calc"}
     ],
     "Multimedia": [
-        {"name": "VLC", "command": "vlc", "description": "Multimedia player", "icon": "vlc"},
+        {"name": "VLC", "command": "vlc", "description": "Media player", "icon": "vlc"},
         {"name": "OBS", "command": "obs-studio", "description": "Streaming software", "icon": "obs-studio"},
-        {"name": "MPC-Qt", "command": "mpc-qt", "description": "Video player via Qt", "icon": "mpc-qt"},
+        {"name": "MPC-Qt", "command": "mpc-qt", "description": "Qt video player", "icon": "mpc-qt"},
         {"name": "Audacity", "command": "audacity", "description": "Audio editor", "icon": "audacity"},
         {"name": "Easyeffects", "command": "easyeffects", "description": "Audio effects", "icon": "easyeffects"},
         {"name": "Shotcut", "command": "shotcut", "description": "Video editor", "icon": "shotcut"},
-        {"name": "Museeks", "command": "Museeks", "description": "Music player", "icon": "museeks"},
+        {"name": "Webcamoid", "command": "webcamoid", "description": "Webcam", "icon": "webcamoid"},
         {"name": "Cheese", "command": "cheese", "description": "Photo and video capture", "icon": "cheese"},
-        {"name": "VokoscreenNG", "command": "vokoscreen-ng", "description": "Screen recording software", "icon": "voko"}
+        {"name": "VokoscreenNG", "command": "vokoscreen-ng", "description": "Screen recording software", "icon": "voko"},
+        {"name": "Peek", "command": "peek", "description": "Window recorder", "icon": "peek"}
     ],
     "System": [
         {"name": "Xfce Task Manager", "command": "xfce4-taskmanager", "description": "Task manager", "icon": "xfce4-taskmanager"},
         {"name": "Terminator", "command": "terminator", "description": "Modern tiling terminal", "icon": "terminator"},
         {"name": "Tilix", "command": "tilix", "description": "Terminal emulator", "icon": "tilix"},
-        {"name": "Engrampa", "command": "engrampa", "description": "Compressed file manager", "icon": "engrampa"},
+        {"name": "Engrampa", "command": "engrampa", "description": "Archive manager", "icon": "engrampa"},
         {"name": "Q4Wine", "command": "q4wine", "description": "Windows application compatibility", "icon": "q4wine"},
-        {"name": "Wine", "command": "winecfg", "description": "Compatibility to run Windows applications", "icon": "wine"},
-        {"name": "gdebi", "command": "gdebi", "description": "Installer for .deb packages", "icon": "gdebi"},
-        {"name": "PeaZip (Requires Extra Repo)", "command": "peazip", "description": "Advanced compressed file manager", "icon": "peazip"},
+        {"name": "Wine", "command": "winecfg", "description": "Compatibility for running Windows applications", "icon": "wine"},
+        {"name": "gdebi", "command": "gdebi", "description": "Deb package installer", "icon": "gdebi"},
+        {"name": "PeaZip", "command": "peazip", "description": "Advanced archive manager", "icon": "peazip"},
         {"name": "GParted", "command": "gparted", "description": "Disk management utility", "icon": "gparted"}
     ],
     "Development": [
         {"name": "Thonny", "command": "thonny", "description": "IDE for Python", "icon": "thonny"},
-        {"name": "Geany", "command": "geany", "description": "Text editor for development", "icon": "geany"},
-        {"name": "Bluefish", "command": "bluefish", "description": "Text editor for web development", "icon": "bluefish"},
-        {"name": "KDevelop", "command": "kdevelop", "description": "IDE for software development", "icon": "kdevelop"},
+        {"name": "Geany", "command": "geany", "description": "Development text editor", "icon": "geany"},
+        {"name": "Bluefish", "command": "bluefish", "description": "Web development text editor", "icon": "bluefish"},
+        {"name": "KDevelop", "command": "kdevelop", "description": "Software development IDE", "icon": "kdevelop"},
         {"name": "Kate", "command": "kate", "description": "Advanced text editor", "icon": "kate"},
         {"name": "GNU Emacs", "command": "emacs", "description": "Extensible and customizable text editor", "icon": "emacs"}
+    ],
+    "Games": [
+        {"name": "Lutris", "command": "lutris", "description": "Advanced game launcher", "icon": "lutris"},
+        {"name": "PPSSPP", "command": "ppsspp", "description": "Advanced PSP emulator", "icon": "ppsspp"},
+        {"name": "Duckstation", "command": "duckstation", "description": "Advanced PS1 emulator", "icon": "duckstation"},
+        {"name": "Rosalie's Mupen GUI", "command": "rosalie-mg", "description": "Advanced N64 emulator", "icon": "rmg"},
+        {"name": "SkyEmu", "command": "skyemu", "description": "GBA/GBC/GB emulator", "icon": "skyemu"},
+        {"name": "Pico8Games", "command": "pico8-games", "description": "PICO-8 games pack", "icon": "pico8"},
+        {"name": "SuperTuxKart", "command": "supertuxkart", "description": "Kart racing game", "icon": "tuxkart"}
     ]
 }

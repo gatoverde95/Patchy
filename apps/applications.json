@@ -1,17 +1,20 @@
 {
     "Internet": [
         {"name": "GNOME Epiphany", "command": "epiphany", "description": "Navegador web ligero de GNOME", "icon": "epiphany"},
-        {"name": "Chromium", "command": "chromium", "description": "Navegador web", "icon": "chromium"},
+        {"name": "Ungoogled-Chromium", "command": "ungoogled-chromium", "description": "Navegador web sin Google", "icon": "chromium"},
         {"name": "uGet", "command": "uget", "description": "Descargador de archivos", "icon": "uget"},
         {"name": "Transmission (Qt)", "command": "transmission-qt", "description": "Cliente BitTorrent", "icon": "transmission-qt"},
-        {"name": "Telegram (Version CuerdOS)", "command": "tdesktop", "description": "Mensajería instantánea", "icon": "telegram"},
-        {"name": "Midori (Requiere Repo Extra)", "command": "midori", "description": "Navegador basado en Firefox", "icon": "midori"}
+        {"name": "Telegram", "command": "tdesktop", "description": "Mensajería instantánea", "icon": "telegram"},
+        {"name": "Brave", "command": "brave", "description": "Navegador privado basado en Chromium", "icon": "brave"},
+        {"name": "Vivaldi", "command": "vivladi-stable", "description": "Navegador estetico basado en Chromium", "icon": "vivaldi"}
     ],
     "Gráficos/Edición": [
         {"name": "GIMP", "command": "gimp", "description": "Editor de imágenes", "icon": "gimp"},
         {"name": "Inkscape", "command": "inkscape", "description": "Editor de gráficos vectoriales", "icon": "inkscape"},
         {"name": "darktable", "command": "darktable", "description": "Procesador de fotos en RAW", "icon": "darktable"},
         {"name": "Krita", "command": "krita", "description": "Herramienta de pintura digital", "icon": "krita"},
+        {"name": "Flameshot", "command": "flameshot", "description": "Herramienta de capturas", "icon": "flameshot"},
+        {"name": "qView", "command": "qview", "description": "Visor de imágenes Qt", "icon": "qview"},
         {"name": "Eye of MATE", "command": "eom", "description": "Visor de imágenes", "icon": "eom"},
         {"name": "Blender", "command": "blender", "description": "Software de creación 3D", "icon": "blender"}
     ],
@@ -19,7 +22,9 @@
         {"name": "LibreOffice", "command": "libreoffice", "description": "Suite ofimática", "icon": "libreoffice"},
         {"name": "Abiword", "command": "abiword", "description": "Procesador de texto", "icon": "abiword"},
         {"name": "Pluma", "command": "pluma", "description": "Editor de texto", "icon": "pluma"},
-        {"name": "PDF Arranger", "command": "pdfarranger", "description": "Enlazador de doc. PDF", "icon": "pdfarranger"},
+        {"name": "PDF Arranger", "command": "pdfarranger", "description": "Enlazador de documentos", "icon": "pdfarranger"},
+        {"name": "ONLYOFFICE", "command": "onlyoffice-desktopeditors", "description": "Suite ofimática estetica", "icon": "onlyoffice"},
+        {"name": "Orage", "command": "orage", "description": "Calendario de Xfce", "icon": "orage"},
         {"name": "MATE Calc", "command": "mate-calc", "description": "Calculadora avanzada", "icon": "mate-calc"}
     ],
     "Multimedia": [
@@ -29,9 +34,10 @@
         {"name": "Audacity", "command": "audacity", "description": "Editor de audio", "icon": "audacity"},
         {"name": "Easyeffects", "command": "easyeffects", "description": "Efectos de audio", "icon": "easyeffects"},
         {"name": "Shotcut", "command": "shotcut", "description": "Editor de video", "icon": "shotcut"},
-        {"name": "Museeks", "command": "Museeks", "description": "Reproductor de música", "icon": "museeks"},
+        {"name": "Webcamoid", "command": "webcamoid", "description": "Webcam", "icon": "webcamoid"},
         {"name": "Cheese", "command": "cheese", "description": "Captura de fotos y videos", "icon": "cheese"},
-        {"name": "VokoscreenNG", "command": "vokoscreen-ng", "description": "Software de grabación de pantalla", "icon": "voko"}
+        {"name": "VokoscreenNG", "command": "vokoscreen-ng", "description": "Software de grabación de pantalla", "icon": "voko"},
+        {"name": "Peek", "command": "peek", "description": "Grabador de ventanas", "icon": "peek"}
     ],
     "Sistema": [
         {"name": "Gestor de Tareas de Xfce", "command": "xfce4-taskmanager", "description": "Administrador de tareas", "icon": "xfce4-taskmanager"},
@@ -41,7 +47,7 @@
         {"name": "Q4Wine", "command": "q4wine", "description": "Compatibilidad de aplicaciones Windows", "icon": "q4wine"},
         {"name": "Wine", "command": "winecfg", "description": "Compatibilidad para ejecutar aplicaciones de Windows", "icon": "wine"},
         {"name": "gdebi", "command": "gdebi", "description": "Instalador de paquetes .deb", "icon": "gdebi"},
-        {"name": "PeaZip (Requiere Repo Extra)", "command": "peazip", "description": "Gestor de archivos comprimidos avanzado", "icon": "peazip"},
+        {"name": "PeaZip", "command": "peazip", "description": "Gestor de archivos comprimidos avanzado", "icon": "peazip"},
         {"name": "GParted", "command": "gparted", "description": "Utilidad de gestión de discos", "icon": "gparted"}
     ],
     "Desarrollo": [
@@ -51,5 +57,14 @@
         {"name": "KDevelop", "command": "kdevelop", "description": "IDE para desarrollo de software", "icon": "kdevelop"},
         {"name": "Kate", "command": "kate", "description": "Editor de texto avanzado", "icon": "kate"},
         {"name": "GNU Emacs", "command": "emacs", "description": "Editor de texto extensible y personalizable", "icon": "emacs"}
+    ],
+    "Juegos": [
+        {"name": "Lutris", "command": "lutris", "description": "Launcher avanzado para Juegos", "icon": "lutris"},
+        {"name": "PPSSPP", "command": "ppsspp", "description": "Emulador de PSP avanzado", "icon": "ppsspp"},
+        {"name": "Duckstation", "command": "duckstation", "description": "Emulador de PS1 avanzado", "icon": "duckstation"},
+        {"name": "Rosalie`s Mupen GUI", "command": "rosalie-mg", "description": "Emulador de N64 avanzado", "icon": "rmg"},
+        {"name": "SkyEmu", "command": "skyemu", "description": "Emulador de GBA/GBC/GB", "icon": "skyemu"},
+        {"name": "Pico8Games", "command": "pico8-games", "description": "Pack de juegos PICO-8", "icon": "pico8"},
+        {"name": "SuperTuxKart", "command": "supertuxkart", "description": "Juego de carreras con karts", "icon": "tuxkart"}
     ]
 }
